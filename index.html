@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Barrett GIS JS Demo</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- import Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <!-- import Mapbox dependencies -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
+    <!-- import Mapbox geocoding dependencies -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js">
+    </script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
+        type="text/css" />
+    <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+    <!-- Import ArcGIS for JS-->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/themes/dark/main.css" />
+
+    <!-- import Vue before Element -->
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <!-- Import Axios-->
+    <script type="text/javascript" src="./node_modules/axios/dist/axios.min.js"></script>
+    <!-- import ElementUI JS -->
+    <!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+    <script src="node_modules/element-ui/lib/index.js"></script>
+    <!-- import sheetJS-->
+    <script src="node_modules/xlsx/dist/xlsx.full.min.js"></script>
+    <!-- import ElementUI CSS -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+    <link rel="stylesheet" href="node_modules/element-ui/lib/theme-chalk/index.css">
+    <script type="text/javascript" src="./components/table-componet.js"></script>
+    <!-- Import bootstrap CSS files-->
+    <link rel="stylesheet" type="text/css" href="./node_modules/bootstrap/dist/css/bootstrap-grid.css" />
+    <!-- Import bootstrap CSS files-->
+    <link rel="stylesheet" type="text/css" href="./node_modules/bootstrap/dist/css/bootstrap.css" />
+    <!-- Import bootstrap CSS files-->
+    <link rel="stylesheet" type="text/css" href="./node_modules/bootstrap/dist/css/bootstrap-reboot.css" />
+    <script type="text/javascript" src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- Import Jquery for AJAX Webservice -->
+    <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <!-- Import customized CSS -->
+    <link rel="stylesheet" type="text/css" href="./css/map-index.css" />
+    <!-- Import D3 -->
+    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Div for Mapbox -->
+        <div id="map" v-show="true"></div>
+        <!-- Legend for Mapbox Demo = US State Population-->
+        <div id="state-legend" class="legend" v-show="showPopStateLegend">
+            <h4>Population</h4>
+            <div><span style="background-color: #723122"></span>25,000,000</div>
+            <div><span style="background-color: #8B4225"></span>10,000,000</div>
+            <div><span style="background-color: #A25626"></span>7,500,000</div>
+            <div><span style="background-color: #B86B25"></span>5,000,000</div>
+            <div><span style="background-color: #CA8323"></span>2,500,000</div>
+            <div><span style="background-color: #DA9C20"></span>1,000,000</div>
+            <div><span style="background-color: #E6B71E"></span>750,000</div>
+            <div><span style="background-color: #EED322"></span>500,000</div>
+            <div><span style="background-color: #F2F12D"></span>0</div>
+        </div>
+        <div id="county-legend" class="legend" style="display: none;" v-show="showPopCountyLegend">
+            <h4>Population</h4>
+            <div><span style="background-color: #723122"></span>1,000,000</div>
+            <div><span style="background-color: #8B4225"></span>500,000</div>
+            <div><span style="background-color: #A25626"></span>100,000</div>
+            <div><span style="background-color: #B86B25"></span>50,000</div>
+            <div><span style="background-color: #CA8323"></span>10,000</div>
+            <div><span style="background-color: #DA9C20"></span>5,000</div>
+            <div><span style="background-color: #E6B71E"></span>1,000</div>
+            <div><span style="background-color: #EED322"></span>100</div>
+            <div><span style="background-color: #F2F12D"></span>0</div>
+        </div> <!-- End Legend for Mapbox Demo = US State Population-->
+        <!-- Controls for earthquake data display -->
+        <div class="map-overlay top" v-show="showEarthquakeControl">
+            <div class="map-overlay-inner">
+                <h4>Significant earthquakes in 2015</h4>
+                <el-button :icon="playBtnIcon" type="warning" @click="earthquakeAutoplay" style="width: 35%;">Autoplay
+                </el-button>
+                <label id="month">{{displayMonth}}</label>
+                <input id="slider" type="range" min="0" max="11" step="1" value="0" v-model="sliderValue" />
+            </div>
+            <div class="map-overlay-inner">
+                <div id="legend-earthquake" class="legend-earthquake">
+                    <div class="bar"></div>
+                    <div>Magnitude (m)</div>
+                </div>
+            </div>
+        </div><!-- End Controls for earthquake data display -->
+        <el-button icon="el-icon-setting" circle @click="drawerShow = true"
+            style="margin-left: 16px; margin-top: 16px;position: absolute;"></el-button>
+        <el-drawer title="Map Settings" :visible.sync="drawerShow" :direction="direction" :before-close="handleClose">
+            <!-- Collapse Control for author info-->
+            <el-collapse accordion style="margin: 0px 15px 15px 15px;">
+                <el-collapse-item>
+                    <template slot="title" style="margin-left: 30px;">
+                        Author Info: <i class="header-icon el-icon-info" style="margin-left: 15px;"></i>
+                    </template>
+                    <div id="authorDiv" style="height: 50px;">
+                        <img src="./static/img/photo_round.png" alt=""
+                            style="height: 50px; float: left; margin-left: 5px; margin-right: 5px;">
+                        <div style="height: 50px; float: left; margin-left: 5px; text-align: center;">
+                            <h5> Mapbox demo implemented by Bing Zhou in 2019.</h5>
+                        </div>
+                    </div>
+                    <!-- Link button -->
+                    <el-button icon="el-icon-view" type="warning" @click="jumpTo(1)" style="width: 100%;">Jump to ArcGIS
+                        Map Demos</el-button>
+                </el-collapse-item>
+            </el-collapse><!-- End Collapse Control for author info-->
+            <el-form :model="formData" size="mini" style="margin-right: 15px; margin-left: 10px;">
+                <!-- Select map theme -->
+                <el-form-item label="Map Theme:" :label-width="formLabelWidth">
+                    <el-select style="width: 100%;" id="selectMapTheme" v-model="selectedMapTheme"
+                        placeholder="Select Map Type" @change="onSelectedMapChange">
+                        <el-option v-for="mapStyle in mapStyleList" :label="mapStyle.label" :value="mapStyle.value">
+                            {{mapStyle.label}}
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <!-- Select Demo type -->
+                <el-form-item label="Demo Type:" :label-width="formLabelWidth">
+                    <el-select style="width: 100%;" id="selectDemo" v-model="selectedDemoType"
+                        placeholder="Select Demo Type" @change="onSelectedDemoChange">
+                        <el-option v-for="demoType in demoTypeList" :label="demoType.label" :value="demoType.value">
+                            {{demoType.label}}
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <!-- Test Button -->
+                <el-button icon="el-icon-view" type="warning" @click="testBtnClick" style="width: 40%;">Function
+                    Tessting 1</el-button>
+                <el-button icon="el-icon-view" type="warning" @click="testBtnClick" style="width: 40%;">Function
+                    Tessting 2</el-button>
+                <!-- Tool box form for 1=Basic Map Demo -->
+                <el-form :model="formData" size="mini" v-if="selectedDemoType == 0">
+                    <label style="margin-top: 10px;">Toolbox:</label>
+                    <div>
+                        <el-button icon="el-icon-refresh" type="primary" @click="refreshLayers">Refresh LayerList
+                        </el-button>
+                        <label for="layer-edit-switch"> Edit Default Layers:</label>
+                        <el-switch id="layer-edit-switch" v-model="editDefaultLayers" active-color="#13ce66"
+                            inactive-color="#ff4949" @change="onLayerEditSwitchChange">
+                        </el-switch>
+                    </div>
+                    <div style="margin: 10px; height: 350px; overflow-y: scroll;overflow-x: hidden;">
+                        <label>Layer Controller:</label>
+                        <!-- Checkbox for all custom layers -->
+                        <el-checkbox :disabled="customLayer.disabled" v-for="customLayer in customLayerList"
+                            :label="customLayer.id" border v-model="customLayer.visibility"
+                            @change="layerCheckChange(customLayer.id, customLayer.visibility)"
+                            style="display: block; width: 50%;">
+                        </el-checkbox>
+                    </div>
+                    <div style="margin: 10px;">
+                        <label>Opacity Controller:</label>
+                        <el-slider v-model="layerOpacity"></el-slider>
+                    </div>
+                </el-form>
+                <!-- Tool box form for 2=Cluster demo -->
+                <el-form :model="formData" size="mini" v-if="selectedDemoType == 1">
+                    <label style="margin-top: 10px;">Toolbox:</label>
+                    <!-- Select Data Source -->
+                    <el-form-item label="Data Source:" :label-width="formLabelWidth">
+                        <el-select style="width: 100%;" id="selectDataSource" v-model="selectedDataSource"
+                            placeholder="Select Data Source" @change="onDataSourceSelectChange">
+                            <el-option v-for="dataSource in dataSourceList" :label="dataSource.label"
+                                :value="dataSource.value">
+                                {{dataSource.label}}
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-button icon="el-icon-thumb" type="success" @click="loadClusterDataBtnClick"
+                        style="width: 100%;">**Load Data with Cluster**
+                    </el-button>
+                    <label style="margin-top: 10px;">Description:</label>
+                    <div>
+                        <span class="description-span">In this demo, over 500k of POI data is loaded.</span>
+                        <span class="description-span">Georeferenced POI are visualized in different clusters.</span>
+                        <span class="description-span">Clusters resize according to zoom level.</span>
+                        <span class="description-span">Clusters will crack by clicking on them.</span>
+                    </div>
+                </el-form>
+                <!-- Tool box form for 3=Leaflet Demo -->
+                <el-form :model="formData" size="mini" v-if="selectedDemoType == 2">
+                    <span>Tool box for demo 3. Function still developing...</span>
+                </el-form>
+                <!-- Tool box form for 4=Location Big data with heat map -->
+                <el-form :model="formData" size="mini" v-if="selectedDemoType == 3">
+                    <label style="margin-top: 10px;">Toolbox:</label>
+                    <div>
+                        <el-button icon="el-icon-thumb" type="success" @click="locationDataClick" style="width: 100%;">
+                            **Load Location Data**</el-button>
+                    </div>
+                    <label style="margin-top: 10px;">Description:</label>
+                    <div>
+                        <span class="description-span">In this demo, over 500k of POI data is loaded.</span>
+                        <span class="description-span">Georeferenced POI are visualized in different colors,</span>
+                        <span class="description-span">and a heat map is generated accordingly.</span>
+                        <span class="description-span">Heat map layers can be hidden via basic map demo page.</span>
+                    </div>
+                    <!-- Test Button -->
+                </el-form>
+                <!-- Tool box form for 5=Trajectory data with Echarts -->
+                <el-form :model="formData" size="mini" v-if="selectedDemoType == 4">
+                    <span>Tool box for demo 5. Function still developing...</span>
+                </el-form>
+                <!-- Tool box form for 6=Us Population Demo -->
+                <el-form :model="formData" size="mini" v-if="selectedDemoType == 5">
+                    <label style="margin-top: 10px;">Description:</label>
+                    <div>
+                        <span class="description-span">In this demo, all US states and counties are loaded.</span>
+                        <span class="description-span">They are presented by shapes and the population is
+                            presented</span>
+                        <span class="description-span">by color density.</span>
+                    </div>
+                </el-form>
+                <!-- Tool box form for 7=Real time location stream -->
+                <el-form :model="formData" size="mini" v-if="selectedDemoType == 6">
+                    <span>Tool box for demo 7. Function still developing...</span>
+                </el-form>
+                <!-- Tool box form for 8=Spatiotemporal earthquake -->
+                <el-form :model="formData" size="mini" v-if="selectedDemoType == 7">
+                    <span>Controls are place on the map which can be leveraged to display earthquake data.</span>
+                </el-form>
+            </el-form>
+        </el-drawer>
+    </div>
+    <!--Load Components and js-->
+    <script type="text/javascript" src="./js/map-index.js"></script>
+    <script>
+        mapboxgl.accessToken =
+            'pk.eyJ1Ijoic3BnYmFycmV0dCIsImEiOiJjazM0NjRvZDkxMGVtM29wYmZ5NHR1aG1lIn0.3h5avs5uYX9x7gK5xzWmSQ';
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/mapbox/dark-v10',
+            center: [121.484413, 31.238931], // starting position: Shanghai
+            //center: [115.719970, 28.197359], // starting position: Fengcheng
+            zoom: 12 // starting zoom
+        });
+        // Add geocoder:
+        map.addControl(
+            new MapboxGeocoder({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl: mapboxgl
+            })
+        );
+        // Add zoom and rotation controls to the map.
+        map.addControl(new mapboxgl.NavigationControl());
+        // Add scale control:
+        var scale = new mapboxgl.ScaleControl({
+            maxWidth: 80,
+            unit: 'imperial'
+        });
+        map.addControl(scale);
+        // Geolocate Control
+        map.addControl(new mapboxgl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true
+            },
+            trackUserLocation: true
+        }));
+        scale.setUnit('metric');
+
+        // Map on load:
+        map.on('load', function () {
+            getAllCustomlLayers(); // From map-index.js
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+body {
+    background-color: #eeeeee;
+}
+
+.searchPanelLabel {
+    text-overflow: ellipsis;
+    display: inline;
+}
+
+.searchPanelSelect {
+    width: 13%;
+}
+
+.formPanelLabel {
+    display: inline-block;
+    width: 13%;
+}
+
+.formPanelSelect {
+    width: 34%;
+}
+
+.formPanelLabelNumber {
+    display: inline-block;
+    width: 10%;
+}
+
+.formPanelInputNumber {
+    width: 35%;
+}

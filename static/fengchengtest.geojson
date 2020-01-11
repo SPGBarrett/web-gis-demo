@@ -1,0 +1,252 @@
+{
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.714365,
+          28.202171
+        ],
+        "type": "Point"
+      },
+      "id": "0253fbaa48ce50f97655e709d2ba6cfd"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.712792,
+          28.201763
+        ],
+        "type": "Point"
+      },
+      "id": "07710317072ae5dea6a51921d626bbb3"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.710539,
+          28.202755
+        ],
+        "type": "Point"
+      },
+      "id": "0a41b08e45dc9947fefbb7d71cafd295"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          [
+            115.715723,
+            28.204428
+          ],
+          [
+            115.715553,
+            28.201953
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "19b7127c1f3e571d7876b5dfd4fb577b"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.714365,
+          28.203123
+        ],
+        "type": "Point"
+      },
+      "id": "2058cbc913595e76f207e3be75339175"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.713023,
+          28.203694
+        ],
+        "type": "Point"
+      },
+      "id": "2bcb44017b5fe772d5042483de87ca4d"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          [
+            115.710709,
+            28.200539
+          ],
+          [
+            115.710662,
+            28.198717
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "3644a398a7020ea7fb11fdcf5b8ffa54"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "place_name": "Fengcheng Powre Plant"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              115.708811,
+              28.205366
+            ],
+            [
+              115.708687,
+              28.196473
+            ],
+            [
+              115.717837,
+              28.196419
+            ],
+            [
+              115.717791,
+              28.20538
+            ],
+            [
+              115.708811,
+              28.205366
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "41e2c94c440747b47e2ac2233ff284a4"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          [
+            115.710786,
+            28.200947
+          ],
+          [
+            115.715739,
+            28.201097
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "4bdbc915d95ae0ced46669529a726881"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.711156,
+          28.201681
+        ],
+        "type": "Point"
+      },
+      "id": "4ed3467f9ec216f07e13b76526631002"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.710554,
+          28.203558
+        ],
+        "type": "Point"
+      },
+      "id": "5e5da91b00fb2affed3464d35280a7b9"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.712221,
+          28.202701
+        ],
+        "type": "Point"
+      },
+      "id": "ad990551f37a3de69c97bd2c3dc8669f"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.711372,
+          28.203558
+        ],
+        "type": "Point"
+      },
+      "id": "b7750d2be69065019faf319206e50b7f"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.712128,
+          28.203558
+        ],
+        "type": "Point"
+      },
+      "id": "c433efdb3617d493014c714be5d9b73b"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.711403,
+          28.20266
+        ],
+        "type": "Point"
+      },
+      "id": "e5a8736e7373ae0d2712d56ceb0b9894"
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          115.71327,
+          28.202742
+        ],
+        "type": "Point"
+      },
+      "id": "fb15651c6e9ec1a3c5900eefaa2a5a24"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "wikidata": "Q1375351",
+        "place_name": "Fengcheng Shi, Yichun Shi, Jiangxi, China"
+      },
+      "geometry": {
+        "coordinates": [
+          115.78333,
+          28.19583
+        ],
+        "type": "Point"
+      },
+      "id": "locality.6485591233060082"
+    }
+  ],
+  "type": "FeatureCollection"
+}
